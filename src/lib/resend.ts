@@ -1,3 +1,6 @@
 import { Resend } from 'resend';
+import dotenv from 'dotenv';
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+
+dotenv.config();
+export const resend = new Resend("re_PSfhKdx3_MRxzCWeXkX1jU6hmcCLiyuXM");

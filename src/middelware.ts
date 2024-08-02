@@ -1,12 +1,19 @@
 import { NextResponse ,NextRequest } from 'next/server'
 
 export {default} from "next-auth/middleware"
- import { getToken } from 'next-auth/jwt'
+ import { getToken , GetTokenParams } from 'next-auth/jwt'
+
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
    
-     const token = await getToken({req: request})
+
+  const params: GetTokenParams<false> = {
+    req: request,
+    secret: 'khare', // Replace with your actual secret
+    salt: 'salt' // Replace with your actual salt
+  };
+     const token = await getToken(params)
      const url = request.nextUrl
 
      if (token && (
