@@ -10,7 +10,7 @@ import { acceptMessageSchema } from '../../../../schemas/acceptMessageSchema';
 
 
 
-export const authOptions  = NextAuth({
+ const authOptions  = NextAuth({
     providers:[
        Credentials({
         credentials: {
@@ -62,7 +62,7 @@ export const authOptions  = NextAuth({
         if(user){
             token._id = user._id?.toString()
             token.isVerified = user.isVerified
-            token.isAcceptingMessage = user.isAcceptingMessage 
+            token.isAcceptingMessage = user.isAcceptingMessages
             token.username = user.username
         }
         return token
@@ -80,3 +80,5 @@ export const authOptions  = NextAuth({
  
    }
 })
+
+export default NextAuth
