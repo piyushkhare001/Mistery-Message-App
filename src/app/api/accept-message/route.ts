@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/options'
+import  {authOptions} from '../auth/[...nextauth]/options'
 import dbConnected from '@/lib/dbConnect'
 import UserModel from '@/model/User'
 import {User} from 'next-auth'
@@ -7,8 +7,6 @@ import {User} from 'next-auth'
 
 export async function POST(req : Request){
     await dbConnected();
-
-
 
     // for getting session to find which user is login 
     const session = await getServerSession(authOptions)
@@ -59,3 +57,43 @@ export async function POST(req : Request){
      }
 }  
 
+export async function GET(req: Request) {
+  await dbConnected();
+
+  // for getting session to find which user is login 
+  const session = await getServerSession(authOptions)
+  const user:User = session?.user;
+
+  if(!session || !session?.user){
+      return Response.json(
+          { success: false, message: 'Not authenticated' },
+          { status: 401 }
+        );
+  }
+
+   // fetch user id
+
+   const userId = user._id
+try{
+  
+  const foundUser  =  await UserModel.findById(userId)
+  if(!foundUser){
+    return Response.json(
+        { success: false, message: 'failed to found user' },
+        { status: 401 }
+      );
+}
+return Response.json({
+         success : true,
+         isAcceptingMessage : foundUser.isAcceptingMessage
+},
+{status : 200})
+}
+catch(err){
+  console.error( err);
+        return Response.json(
+          { success: false, message: 'Error iin getting message acceptence status  ' },
+          { status: 500 })
+}
+
+}

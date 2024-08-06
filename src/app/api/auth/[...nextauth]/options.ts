@@ -1,6 +1,7 @@
 
 import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
+
+import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from "bcryptjs"
 import dbConnected from "@/lib/dbConnect"
 import UserModel from "@/model/User"
@@ -10,9 +11,11 @@ import { acceptMessageSchema } from '../../../../schemas/acceptMessageSchema';
 
 
 
- const authOptions  = NextAuth({
+ export const authOptions  = NextAuth({
     providers:[
-       Credentials({
+        CredentialsProvider({
+            id: 'credentials',
+            name: 'Credentials',
         credentials: {
             username : {label : "EMAIL" , type : "text"},
             password : {label : "PASSWORD" , type : "password"}
