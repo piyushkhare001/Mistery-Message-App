@@ -2,7 +2,7 @@ import dbConnected from "@/lib/dbConnect"
 import bcrypt from 'bcryptjs'
 import { sendVerificationEmail } from "@/helpers/sendEmail"
 import User from "@/model/User"
-import { ApiResponse } from "@/types/apiResponse"
+
 
 export async function POST(request:Request) {
   await  dbConnected()
@@ -10,10 +10,10 @@ export async function POST(request:Request) {
         const {username , email , password} = await request.json()
  
 
-        const existingVerifiedUserByUsername  = await username.findOne({
-             email ,
-             isVerified : true
-        })
+        const existingVerifiedUserByUsername  = await User.findOne({
+          username,
+          isVerified: true,
+        });
         if(existingVerifiedUserByUsername){
             return Response.json(
                 {
@@ -28,7 +28,7 @@ export async function POST(request:Request) {
         
 
         let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-
+       console.log(verifyCode)
         if (existingUserByEmail){
             if(existingUserByEmail.isVerified){
                 return Response.json(
@@ -63,6 +63,7 @@ export async function POST(request:Request) {
           })
           await newUser.save()
         }
+      
 
         const emailResponse = await sendVerificationEmail(
       email , username , verifyCode
@@ -85,7 +86,7 @@ export async function POST(request:Request) {
             },
             { status: 201 }
           );
-
+   
 
         return  Response.json({ success: true, message: 'sign up sucessfull' });
     }catch(error :any){
